@@ -29,3 +29,28 @@ def scan(text, *extractors):
     for extractor in extractors:
         for item in extractor(text):
             yield item
+
+_date_iso8601_pat = _whole_word(r'\d{4}-(0\d|1[0-2])-(0[1-9]|[12][0-9]|3[01])')
+def dates_iso8601(text):
+    for match in _date_iso8601_pat.finditer(text):
+        yield('date', match)
+
+_date_fmt2_pat = _whole_word(r'\d{2} (Jan|Feb|Mar]|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{4}')
+def dates_fmt2(text):
+    for match in _date_fmt2_pat.finditer(text):
+        yield('date', match)
+
+_date_newiso8601_pat = _whole_word(r'\d{4}-\d{2}-\d{2}(T| )\d{2}:\d{2}:\d{2}(\.\d+)?(([+-]\d{4})|Z)')
+def dates_newiso8601(text): 
+    for match in _date_newiso8601_pat.finditer(text):
+        yield('date', match)
+
+_date_fmt3_pat = _whole_word(r'\d{2} (Jan|Feb|Mar]|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)?(,)? \d{4}')
+def dates_fmt3(text):
+    for match in _date_fmt3_pat.finditer(text):
+        yield('date', match)
+
+_comma_seperator_pat = _whole_word(r'\d{3}(,\d{3})*$')
+def comma_seperator(text):
+    for match in _comma_seperator_pat.finditer(text):
+        yield('number', match)
